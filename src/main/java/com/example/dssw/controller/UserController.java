@@ -41,11 +41,11 @@ public class UserController {
                     .reward(0)
                     .build();
             userService.create(user);
-            ResponseDTO responseDTO= ResponseDTO.builder().status(200).Message("회원가입 성공").code("성공").build();
+            ResponseDTO responseDTO= ResponseDTO.builder().status(200).Message("회원가입 성공").success(true).build();
             return ResponseEntity.ok().body(responseDTO);
         }
         catch (Exception e){
-            ResponseDTO responseDTO= ResponseDTO.builder().status(400).Message("회원가입 실패 - "+e.getMessage()).code("실패").build();
+            ResponseDTO responseDTO= ResponseDTO.builder().status(400).Message("회원가입 실패 - "+e.getMessage()).success(false).build();
             return ResponseEntity.badRequest().body(responseDTO);
         }
     }
@@ -55,7 +55,6 @@ public class UserController {
     public ResponseEntity<?>  authenticate(@RequestBody UserDTO userDTO)
     {
         UserEntity user=userService.getByCredentials(userDTO.getUserid(), userDTO.getPassword(),passwordEncoder);
-
         if(user != null){
             final String token=tokenProvider.create(user);
             final tokenDTO dto= tokenDTO.builder()
@@ -63,14 +62,14 @@ public class UserController {
             List<tokenDTO> result=new ArrayList<>();
             result.add(dto);
 
-            ResponseDTO responseDTO=ResponseDTO.<tokenDTO>builder().status(200).code("성공").Message("로그인 성공").data(result).build();
+            ResponseDTO responseDTO=ResponseDTO.<tokenDTO>builder().status(200).success(true).Message("로그인 성공").data(result).build();
             return ResponseEntity.ok().body(responseDTO);
         }
         else{
             ResponseDTO responseDTO = ResponseDTO.builder()
-                    .status(400).code("실패").Message("로그인 실패")
+                    .status(400).success(false).Message("로그인 실패")
                     .build();
-            return ResponseEntity.badRequest().body(responseDTO);
+            return ResponseEntity.ok().body(responseDTO);
         }
     }
 

@@ -33,7 +33,7 @@ public class UserService {
     public UserEntity getByCredentials(final String userid, final String password , final PasswordEncoder encoder){
         // 인증정보로 userEntity 검색.
         final Optional<UserEntity> originalUser=userRepository.findByUserid(userid);
-        if(originalUser.get() != null && encoder.matches(password,originalUser.get().getPassword())){
+        if(originalUser.isPresent() && encoder.matches(password,originalUser.get().getPassword())){
             return originalUser.get();
         }
         return null;
