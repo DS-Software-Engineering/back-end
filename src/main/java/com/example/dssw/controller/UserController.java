@@ -28,11 +28,6 @@ public class UserController {
 
     private PasswordEncoder passwordEncoder =new BCryptPasswordEncoder();
 
-    @GetMapping("/hi")
-    public String hi(){
-        return "hi";
-    }
-
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO)
     {
