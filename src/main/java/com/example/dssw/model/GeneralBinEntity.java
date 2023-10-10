@@ -26,16 +26,16 @@ public class GeneralBinEntity {
     @Column(nullable=false)
     private String detail_location;
 
-    @Column(name="open_status", columnDefinition = "TINYINT", length=1)
+    @Column(columnDefinition = "TINYINT", length=1)
     private boolean type_general;
 
-    @Column(name="open_status", columnDefinition = "TINYINT", length=1)
+    @Column(columnDefinition = "TINYINT", length=1)
     private boolean type_cb;
 
-    @Column(name="open_status", columnDefinition = "TINYINT", length=1)
+    @Column(columnDefinition = "TINYINT", length=1)
     private boolean type_recycle;
 
-    @Column(name="open_status", columnDefinition = "TINYINT", length=1)
+    @Column(columnDefinition = "TINYINT", length=1)
     private boolean type_drink;
 
     @Column(nullable=false)
