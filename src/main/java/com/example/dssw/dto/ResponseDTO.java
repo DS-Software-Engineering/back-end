@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 public class ResponseDTO<T> {
     private int status;
-    private String code;
+    private boolean success;
     private String Message;
     private List<T> data;
 
