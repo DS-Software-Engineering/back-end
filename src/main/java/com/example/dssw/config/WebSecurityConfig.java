@@ -5,6 +5,7 @@ import com.example.dssw.security.JwtAuthenticationFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -12,6 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.filter.CorsFilter;
 
+@Configuration
 @EnableWebSecurity
 @Slf4j
 public class WebSecurityConfig //extends WebSecurityConfigurerAdapter
@@ -37,7 +39,7 @@ public class WebSecurityConfig //extends WebSecurityConfigurerAdapter
                             sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     )
                     .authorizeHttpRequests((authorizeRequests) ->
-                            authorizeRequests.requestMatchers("/","/auth/**").permitAll()
+                            authorizeRequests.requestMatchers("/", "/auth/**").permitAll()
                                     .anyRequest().authenticated()
                     );
                     http.addFilterAfter(
