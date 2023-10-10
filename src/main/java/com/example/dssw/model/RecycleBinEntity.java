@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="recycle_bin")
-public class Recycle_bin {
+public class RecycleBinEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,17 +23,17 @@ public class Recycle_bin {
     @Column(nullable=false)
     private String address;
 
-    @Column(nullable=false)
+    @Column(nullable=true)
     private String detail_location;
 
     @Column(nullable=false)
     private String center_phone_num;
 
     @Column(nullable = false)
-    private float latitude;
+    private double latitude;
 
     @Column(nullable = false)
-    private float longtitude;
+    private double longtitude;
 
 
 

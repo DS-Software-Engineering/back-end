@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="general_bin")
-public class General_bin {
+public class GeneralBinEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,23 +26,25 @@ public class General_bin {
     @Column(nullable=false)
     private String detail_location;
 
-    @Column(nullable = false)
+    @Column(name="open_status", columnDefinition = "TINYINT", length=1)
     private boolean type_general;
 
-    @Column(nullable = false)
+    @Column(name="open_status", columnDefinition = "TINYINT", length=1)
     private boolean type_cb;
 
-    @Column(nullable = false)
+    @Column(name="open_status", columnDefinition = "TINYINT", length=1)
     private boolean type_recycle;
 
-    @Column(nullable = false)
+    @Column(name="open_status", columnDefinition = "TINYINT", length=1)
     private boolean type_drink;
 
-    @Column(nullable = false)
-    private float latitude;
+    @Column(nullable=false)
+    private String shape;
 
     @Column(nullable = false)
-    private float longtitude;
+    private double latitude;
 
+    @Column(nullable = false)
+    private double longtitude;
 
 }
