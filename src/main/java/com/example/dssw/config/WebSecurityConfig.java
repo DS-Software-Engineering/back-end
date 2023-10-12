@@ -39,7 +39,7 @@ public class WebSecurityConfig //extends WebSecurityConfigurerAdapter
                             sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     )
                     .authorizeHttpRequests((authorizeRequests) ->
-                            authorizeRequests.requestMatchers("/", "/auth/**").permitAll()
+                            authorizeRequests.requestMatchers("/", "/auth/**","/map").permitAll()
                                     .anyRequest().authenticated()
                     );
                     http.addFilterAfter(
