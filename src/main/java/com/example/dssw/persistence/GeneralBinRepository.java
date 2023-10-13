@@ -4,6 +4,7 @@ import com.example.dssw.dto.MapDTO;
 import com.example.dssw.model.GeneralBinEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -25,4 +26,7 @@ public interface GeneralBinRepository extends JpaRepository<GeneralBinEntity,Lon
     @Query("SELECT new com.example.dssw.dto.MapDTO(g.id, g.latitude, g.longtitude , 'GeneralBin') FROM GeneralBinEntity g WHERE g.type_recycle = true")
     List<MapDTO> find_recycle_Latitude_Longtitude();
 
+    // 검색 및 필터링 메서드
+    @Query("SELECT b FROM GeneralBinEntity b WHERE b.street_name LIKE %:keyword% OR b.address LIKE %:keyword% OR b.detail_location LIKE %:keyword%")
+    List<GeneralBinEntity> searchGeneralBins(@Param("keyword") String keyword);
 }
