@@ -21,9 +21,9 @@ public class FavoriteBinEntity {
     @JoinColumn(referencedColumnName = "id", name = "userid", nullable = false)
     UserEntity user; // 유저 id
 
-    @Column(nullable=false)
-    private Long bin_id; // 휴지통 id
+    @Column(nullable=false, name="bin_id")
+    private Long binId; // 휴지통 id
 
-    @Column(nullable = false, length = 10)
-    private String bin_type; // 가로휴지통인지 재활용정거장인지
+    @Column(nullable = false, length = 10, name="bin_type")
+    private String binType; // 가로휴지통인지 재활용정거장인지
 }

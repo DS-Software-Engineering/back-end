@@ -1,13 +1,6 @@
 package com.example.dssw.controller;
 
-import com.example.dssw.dto.MapDTO;
-import com.example.dssw.dto.ResponseDTO;
-import com.example.dssw.dto.UserDTO;
-import com.example.dssw.model.GeneralBinEntity;
-import com.example.dssw.model.RecycleBinEntity;
-import com.example.dssw.model.UserEntity;
-import com.example.dssw.persistence.GeneralBinRepository;
-import com.example.dssw.persistence.RecycleBinRepository;
+import com.example.dssw.dto.*;
 import com.example.dssw.service.GeneralBinService;
 import com.example.dssw.service.RecycleBinService;
 import lombok.extern.slf4j.Slf4j;
@@ -52,4 +45,19 @@ public class MapController {
 
     }
 
+    @GetMapping("/detail")
+    public ResponseEntity<?> detailGeneralInfo(@RequestParam(value="binId")Long binId, @RequestParam(value="binType")String binType){
+
+        if(binType.equals("general")){
+            GeneralBinDTO res = generalBinService.getDetailGeneralInfo(binId);
+            return ResponseEntity.ok().body(res);
+        } else if (binType.equals("recycle")) {
+            RecycleBinDTO res = recycleBinService.getDetailRecycleInfo(binId);
+            return ResponseEntity.ok().body(res);
+        } else {
+            new IllegalArgumentException("해당하는 타입은 없습니다.");
+        }
+
+        return ResponseEntity.ok().body("해당하는 쓰레기통은 없습니다.");
+    }
 }

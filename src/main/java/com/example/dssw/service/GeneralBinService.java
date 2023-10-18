@@ -1,10 +1,9 @@
 package com.example.dssw.service;
 
+import com.example.dssw.dto.GeneralBinDTO;
 import com.example.dssw.dto.MapDTO;
 import com.example.dssw.model.GeneralBinEntity;
-import com.example.dssw.model.RecycleBinEntity;
 import com.example.dssw.persistence.GeneralBinRepository;
-import com.example.dssw.persistence.RecycleBinRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,5 +29,22 @@ public class GeneralBinService {
         else return null;
 
 
+    }
+
+    public GeneralBinDTO getDetailGeneralInfo(Long binId){
+        GeneralBinEntity bin = repository.findById(binId).orElseThrow(() -> new IllegalArgumentException("해당하는 쓰레기통이 없습니다."));
+
+        GeneralBinDTO res = new GeneralBinDTO();
+
+        res.setStreet_name(bin.getStreet_name());
+        res.setAddress(bin.getAddress());
+        res.setDetail_location(bin.getDetail_location());
+        res.setType_general(bin.isType_general());
+        res.setType_cb(bin.isType_cb());
+        res.setType_recycle(bin.isType_recycle());
+        res.setType_drink(bin.isType_drink());
+        res.setShape(bin.getShape());
+
+        return res;
     }
 }
