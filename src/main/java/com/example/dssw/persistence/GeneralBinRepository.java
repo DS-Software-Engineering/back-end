@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface GeneralBinRepository extends JpaRepository<GeneralBinEntity,Long> {
@@ -29,4 +30,7 @@ public interface GeneralBinRepository extends JpaRepository<GeneralBinEntity,Lon
     // 검색 및 필터링 메서드
     @Query("SELECT b FROM GeneralBinEntity b WHERE b.street_name LIKE %:keyword% OR b.address LIKE %:keyword% OR b.detail_location LIKE %:keyword%")
     List<GeneralBinEntity> searchGeneralBins(@Param("keyword") String keyword);
+
+
+    Optional<GeneralBinEntity> findById(Long Id);
 }
