@@ -41,5 +41,39 @@ public class UserService {
         // return userRepository.findByEmailAndPassword(email,password);
     }
 
+    public String findIdByPhoneNum(final String phoneNum) throws Exception {
+        final Optional<UserEntity> user = userRepository.findByPhonenum(phoneNum);
+        if(user.isPresent()) {
+            return user.get().getUserid();
+        }
+        else{
+            throw new Exception("가입된 회원이 없습니다.");
+        }
+    }
+    public boolean findPasswordByPhonenumAndUserid(final String phonenum,final String userid) throws Exception {
+        final Optional<UserEntity> user = userRepository.findByUseridAndPhonenum(userid,phonenum);
+        if(user.isPresent()) {
+            return true;
+        }
+        else{
+            throw new Exception("가입된 회원이 없습니다.");
+        }
+    }
+
+    public boolean changePassword(final String phonenum,final String userid,String password) throws Exception {
+        final Optional<UserEntity> user = userRepository.findByUseridAndPhonenum(userid,phonenum);
+        if(user.isPresent()) {
+            UserEntity userEntity=user.get();
+            userEntity.setPassword(password);
+            userRepository.save(userEntity);
+            return true;
+        }
+        else {
+            throw new Exception("가입된 회원이 없습니다.");
+        }
+    }
+
+
 
 }
+
