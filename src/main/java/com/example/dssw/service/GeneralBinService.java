@@ -45,6 +45,7 @@ public class GeneralBinService {
         res.setType_drink(bin.isType_drink());
         res.setShape(bin.getShape());
 
+
         return res;
     }
 }

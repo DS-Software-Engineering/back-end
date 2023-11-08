@@ -23,4 +23,6 @@ public class RecycleBinDTO {
 
     private String center_phone_num;
 
+    private boolean favorite;
+
 }
