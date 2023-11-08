@@ -73,6 +73,52 @@ public class UserController {
         }
     }
 
+    @PostMapping("/findId")
+    public ResponseEntity<ResponseDTO>  findIdByPhonenum(@RequestBody UserDTO userDTO){
+        try{
+            String userid=userService.findIdByPhoneNum(userDTO.getPhonenum());
+            List<String> result=new ArrayList<>();
+            result.add(userid);
+            ResponseDTO responseDTO=ResponseDTO.<String>builder().status(200).success(true).data(result).build();
+            return ResponseEntity.ok().body(responseDTO);
+        }catch (Exception e){
+            ResponseDTO responseDTO = ResponseDTO.builder()
+                    .status(400).success(false).Message(e.getMessage())
+                    .build();
+            return ResponseEntity.ok().body(responseDTO);
+        }
 
+    }
+    @PostMapping("/findPassword")
+    public ResponseEntity<ResponseDTO>  findPasswordByPhonenum(@RequestBody UserDTO userDTO){
+        try{
+            boolean isSuccess = userService.findPasswordByPhonenumAndUserid(userDTO.getPhonenum(),userDTO.getUserid());
+            List<Boolean> result=new ArrayList<>();
+            result.add(isSuccess);
+            ResponseDTO responseDTO=ResponseDTO.<Boolean>builder().status(200).success(true).data(result).build();
+            return ResponseEntity.ok().body(responseDTO);
+        }catch (Exception e){
+            ResponseDTO responseDTO = ResponseDTO.builder()
+                    .status(400).success(false).Message(e.getMessage())
+                    .build();
+            return ResponseEntity.ok().body(responseDTO);
+        }
+    }
+
+    @PatchMapping("/changePassword")
+    public ResponseEntity<ResponseDTO>  changePassword(@RequestBody UserDTO userDTO){
+        try{
+            boolean isSuccess=userService.changePassword(userDTO.getPhonenum(),userDTO.getUserid(),passwordEncoder.encode(userDTO.getPassword()));
+            List<Boolean> result=new ArrayList<>();
+            result.add(isSuccess);
+            ResponseDTO responseDTO=ResponseDTO.<Boolean>builder().status(200).success(true).data(result).build();
+            return ResponseEntity.ok().body(responseDTO);
+        }catch (Exception e){
+            ResponseDTO responseDTO = ResponseDTO.builder()
+                    .status(400).success(false).Message(e.getMessage())
+                    .build();
+            return ResponseEntity.ok().body(responseDTO);
+        }
+    }
 
 }
