@@ -1,6 +1,6 @@
 package com.example.dssw.controller;
 
-import com.example.dssw.dto.CreateLikeDTO;
+import com.example.dssw.dto.LikeDTO;
 import com.example.dssw.service.FavoriteBinService;
 import com.example.dssw.service.GeneralBinService;
 import com.example.dssw.service.RecycleBinService;
@@ -24,16 +24,10 @@ public class FavoriteBinController {
     private final FavoriteBinService favoriteBinService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createFavorite(@RequestBody CreateLikeDTO createLikeDTO){
+    public ResponseEntity<?> createFavorite(@RequestBody LikeDTO createLikeDTO){
         favoriteBinService.createLike(createLikeDTO);
 
         return ResponseEntity.ok().body("success");
     }
 
-    @GetMapping("/check")
-    public ResponseEntity<?> checkLike(@RequestParam String userId, @RequestParam(value="binId") Long binId, @RequestParam(value="binType") String binType){
-        boolean checkFav = favoriteBinService.checkFavBin(userId, binId, binType);
-
-        return ResponseEntity.ok().body(checkFav);
-    }
 }

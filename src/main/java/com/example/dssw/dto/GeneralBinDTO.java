@@ -29,6 +29,6 @@ public class GeneralBinDTO {
     private boolean type_drink;
     private String shape;
 
-
+    private boolean favorite;
 
 }

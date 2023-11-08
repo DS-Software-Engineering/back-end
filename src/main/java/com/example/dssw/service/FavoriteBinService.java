@@ -1,7 +1,7 @@
 package com.example.dssw.service;
 
 import com.example.dssw.base.event.FavoriteCreatedEvent;
-import com.example.dssw.dto.CreateLikeDTO;
+import com.example.dssw.dto.LikeDTO;
 import com.example.dssw.model.FavoriteBinEntity;
 import com.example.dssw.model.GeneralBinEntity;
 import com.example.dssw.model.RecycleBinEntity;
@@ -27,8 +27,10 @@ public class FavoriteBinService {
     private final UserRepository userRepository;
     private final FavoriteBinRepository favoriteBinRepository;
     private final ApplicationEventPublisher eventPublisher;
-    public Long createLike(CreateLikeDTO createLikeDTO){
-        UserEntity user = userRepository.findByUserid(createLikeDTO.getUserId()).orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
+
+
+    public Long createLike(LikeDTO createLikeDTO){
+        UserEntity user = userRepository.findById(createLikeDTO.getUserId()).orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
 
         Long binId = null;
 
@@ -60,8 +62,8 @@ public class FavoriteBinService {
     }
 
 
-    public Boolean checkFavBin(String userId, Long binId, String binType){
-        UserEntity user = userRepository.findByUserid(userId).orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
+    public Boolean checkFavBin(Long userId, Long binId, String binType){
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
 
         if(binType.equals("general")){
             GeneralBinEntity bin = generalBinRepository.findById(binId).orElseThrow(() -> new IllegalArgumentException("해당하는 쓰레기통이 없습니다."));
@@ -78,6 +80,7 @@ public class FavoriteBinService {
         }else {
             return true;
         }
+
     }
 
 }
