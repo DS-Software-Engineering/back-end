@@ -47,6 +47,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 securityContext.setAuthentication(authentication);
                 SecurityContextHolder.setContext(securityContext);
             }
+            else{
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 Unauthorized 상태 코드
+                response.getWriter().write("UNAUTHORIZED"); // 클라이언트에게 전송할 메시지 설정
+                //response.sendRedirect("/auth/login"); //리다이렉트 하고 싶으면 이걸로 변경
+                return;
+            }
 
         } catch (Exception ex) {
             logger.error("Could not set user authentication in security context", ex);
