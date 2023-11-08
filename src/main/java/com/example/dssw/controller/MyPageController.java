@@ -1,5 +1,6 @@
 package com.example.dssw.controller;
 
+import com.example.dssw.dto.MyInfoDTO;
 import com.example.dssw.dto.ReportDeclarationDTO;
 import com.example.dssw.dto.ResponseDTO;
 import com.example.dssw.dto.RewardHistoryDTO;
@@ -37,7 +38,6 @@ public class MyPageController {
             ResponseDTO responseDTO= ResponseDTO.builder().status(400).success(false).Message(e.getMessage()).build();
             return ResponseEntity.ok().body(responseDTO);
         }
-
     }
 
     // 리워드 히스토리
@@ -48,10 +48,12 @@ public class MyPageController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-
-
-
-
-
+    // 메뉴 상단 - 닉네임과 리워드
+    @GetMapping("/myInfo")
+    public ResponseEntity<?> getMyInfo(@AuthenticationPrincipal String userId){
+        MyInfoDTO result = myPageService.getMyInfo(Long.parseLong(userId));
+        ResponseDTO responseDTO= ResponseDTO.builder().status(200).success(true).data(Collections.singletonList(result)).build();
+        return ResponseEntity.ok().body(responseDTO);
+    }
 
 }
