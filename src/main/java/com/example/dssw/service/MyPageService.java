@@ -36,7 +36,6 @@ public class MyPageService {
         return dtos;
     }
 
-
     public List<RewardHistoryDTO> getMyRewardHistory(Long userid) {
         return rewardHistoryRepository.findByUserId(userid);
     }
