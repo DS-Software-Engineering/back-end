@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LikeDTO {
-    private Long userId;
     private Long binId;
     private String binType;
 }
