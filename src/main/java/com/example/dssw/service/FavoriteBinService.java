@@ -10,6 +10,7 @@ import com.example.dssw.persistence.FavoriteBinRepository;
 import com.example.dssw.persistence.GeneralBinRepository;
 import com.example.dssw.persistence.RecycleBinRepository;
 import com.example.dssw.persistence.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
@@ -29,8 +30,8 @@ public class FavoriteBinService {
     private final ApplicationEventPublisher eventPublisher;
 
 
-    public Long createLike(LikeDTO createLikeDTO){
-        UserEntity user = userRepository.findById(createLikeDTO.getUserId()).orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
+    public void createLike(Long userId, LikeDTO createLikeDTO){
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
 
         Long binId = null;
 
@@ -57,8 +58,6 @@ public class FavoriteBinService {
 
         FavoriteCreatedEvent event = new FavoriteCreatedEvent(this, fav);
         eventPublisher.publishEvent(event);
-
-        return favoriteBinRepository.save(fav).getId();
     }
 
 
@@ -82,5 +81,31 @@ public class FavoriteBinService {
         }
 
     }
+
+    @Transactional
+    public void deleteLike(Long userId, LikeDTO likeDTO){
+        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
+
+        Long binId = null;
+
+        if(likeDTO.getBinType().equals("general")){
+            GeneralBinEntity bin = generalBinRepository.findById(likeDTO.getBinId()).orElseThrow(() -> new IllegalArgumentException("해당하는 쓰레기통이 없습니다."));
+            binId = bin.getId();
+
+        } else if (likeDTO.getBinType().equals("recycle")) {
+            RecycleBinEntity bin = recycleBinRepository.findById(likeDTO.getBinId()).orElseThrow(() -> new IllegalArgumentException("해당하는 쓰레기통이 없습니다."));
+            binId = bin.getId();
+
+        } else {
+            new IllegalArgumentException("해당하는 쓰레기통이 없습니다.");
+        }
+
+        Optional<FavoriteBinEntity> fav = favoriteBinRepository.findByUserAndBinIdAndBinType(user, binId, likeDTO.getBinType());
+
+        if(fav.isPresent()){
+            favoriteBinRepository.deleteByUserAndBinIdAndBinType(user, binId, likeDTO.getBinType());
+        }
+    }
+
 
 }

@@ -12,6 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -54,33 +55,40 @@ public class MapController {
     @GetMapping("/detail")
     public ResponseEntity<?> detailGeneralInfo(@AuthenticationPrincipal String userId, @RequestParam(value="binId") Long binId, @RequestParam(value="binType") String binType) {
 
+        ResponseDTO responseDTO=null;
+
         if (binType.equals("general")) {
-            GeneralBinDTO res = generalBinService.getDetailGeneralInfo(binId);
+            List<GeneralBinDTO> res = new ArrayList<>();
+            GeneralBinDTO generalBinDTO = generalBinService.getDetailGeneralInfo(binId);
 
             if (userId == "") {
-                res.setFavorite(false);
+                generalBinDTO.setFavorite(false);
             } else {
-                res.setFavorite(favoriteBinService.checkFavBin(Long.parseLong(userId), binId, binType));
+                generalBinDTO.setFavorite(favoriteBinService.checkFavBin(Long.parseLong(userId), binId, binType));
             }
 
-            return ResponseEntity.ok().body(res);
+            res.add(generalBinDTO);
+            responseDTO= ResponseDTO.<GeneralBinDTO>builder().status(200).success(true).data(res).build();
 
         } else if (binType.equals("recycle")) {
-            RecycleBinDTO res = recycleBinService.getDetailRecycleInfo(binId);
+            List<RecycleBinDTO> res = new ArrayList<>();
+            RecycleBinDTO recycleBinDTO = recycleBinService.getDetailRecycleInfo(binId);
 
             if (userId == "") {
-                res.setFavorite(false);
+                recycleBinDTO.setFavorite(false);
             } else {
-                res.setFavorite(favoriteBinService.checkFavBin(Long.parseLong(userId), binId, binType));
+                recycleBinDTO.setFavorite(favoriteBinService.checkFavBin(Long.parseLong(userId), binId, binType));
             }
 
-            return ResponseEntity.ok().body(res);
+            res.add(recycleBinDTO);
+            responseDTO= ResponseDTO.<RecycleBinDTO>builder().status(200).success(true).data(res).build();
 
         } else {
             new IllegalArgumentException("해당하는 타입은 없습니다.");
         }
 
-        return ResponseEntity.ok().body("좋아요 가져오기 실패");
+        return ResponseEntity.ok().body(responseDTO);
+
     }
 
 }
