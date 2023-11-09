@@ -1,5 +1,6 @@
 package com.example.dssw.persistence;
 
+import com.example.dssw.dto.FavoriteBinDTO;
 import com.example.dssw.dto.MapDTO;
 import com.example.dssw.model.GeneralBinEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -33,4 +34,9 @@ public interface GeneralBinRepository extends JpaRepository<GeneralBinEntity,Lon
 
 
     Optional<GeneralBinEntity> findById(Long Id);
+
+    @Query("SELECT new com.example.dssw.dto.FavoriteBinDTO(b.id ,b.latitude,b.longtitude,'GeneralBin',b.address,b.detail_location)  " +
+            "FROM GeneralBinEntity b where b.id in (select f.binId from FavoriteBinEntity f where f.user.id = :userid and binType='GeneralBin')")
+    List<FavoriteBinDTO> searchFavoriteGeneralBin(@Param("userid") Long userid);
+
 }
