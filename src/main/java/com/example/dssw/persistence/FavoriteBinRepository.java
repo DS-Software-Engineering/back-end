@@ -10,4 +10,5 @@ public interface FavoriteBinRepository extends JpaRepository<FavoriteBinEntity,L
 //    Optional<FavoriteBinEntity> findByUser_IdAndBinIdAndBinType(UserEntity userid, Long binId, String binType);
 
     Optional<FavoriteBinEntity> findByUserAndBinIdAndBinType(UserEntity user, Long binId, String binType);
+    Optional<FavoriteBinEntity> deleteByUserAndBinIdAndBinType(UserEntity user, Long binId, String binType);
 }
