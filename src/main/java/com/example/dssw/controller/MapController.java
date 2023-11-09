@@ -91,4 +91,14 @@ public class MapController {
 
     }
 
+    @Autowired
+    AmazonS3Service amazonS3Service;
+
+    @PostMapping("/test")
+    public List<String> test(@RequestParam ("images") List<MultipartFile> multipartFiles){
+        List<String> result = amazonS3Service.uploadFiles("test", multipartFiles);
+
+        return result;
+    }
+
 }
