@@ -1,6 +1,7 @@
 package com.example.dssw.controller;
 
 import com.example.dssw.dto.*;
+import com.example.dssw.service.AmazonS3Service;
 import com.example.dssw.service.FavoriteBinService;
 import com.example.dssw.service.GeneralBinService;
 import com.example.dssw.service.RecycleBinService;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -80,4 +82,5 @@ public class MapController {
 
         return ResponseEntity.ok().body("좋아요 가져오기 실패");
     }
+
 }
