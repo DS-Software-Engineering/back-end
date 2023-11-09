@@ -1,13 +1,18 @@
 package com.example.dssw.controller;
 
 import com.example.dssw.dto.*;
+import com.example.dssw.service.AmazonS3Service;
+import com.example.dssw.service.FavoriteBinService;
 import com.example.dssw.service.GeneralBinService;
 import com.example.dssw.service.RecycleBinService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -19,6 +24,8 @@ public class MapController {
     @Autowired
     RecycleBinService recycleBinService;
 
+    @Autowired
+    FavoriteBinService favoriteBinService;
 
     @GetMapping
     public ResponseEntity<?> getBinMap(@RequestParam(required = false) String type)
@@ -46,18 +53,42 @@ public class MapController {
     }
 
     @GetMapping("/detail")
-    public ResponseEntity<?> detailGeneralInfo(@RequestParam(value="binId")Long binId, @RequestParam(value="binType")String binType){
+    public ResponseEntity<?> detailGeneralInfo(@AuthenticationPrincipal String userId, @RequestParam(value="binId") Long binId, @RequestParam(value="binType") String binType) {
 
-        if(binType.equals("general")){
-            GeneralBinDTO res = generalBinService.getDetailGeneralInfo(binId);
-            return ResponseEntity.ok().body(res);
+        ResponseDTO responseDTO=null;
+
+        if (binType.equals("general")) {
+            List<GeneralBinDTO> res = new ArrayList<>();
+            GeneralBinDTO generalBinDTO = generalBinService.getDetailGeneralInfo(binId);
+
+            if (userId == "") {
+                generalBinDTO.setFavorite(false);
+            } else {
+                generalBinDTO.setFavorite(favoriteBinService.checkFavBin(Long.parseLong(userId), binId, binType));
+            }
+
+            res.add(generalBinDTO);
+            responseDTO= ResponseDTO.<GeneralBinDTO>builder().status(200).success(true).data(res).build();
+
         } else if (binType.equals("recycle")) {
-            RecycleBinDTO res = recycleBinService.getDetailRecycleInfo(binId);
-            return ResponseEntity.ok().body(res);
+            List<RecycleBinDTO> res = new ArrayList<>();
+            RecycleBinDTO recycleBinDTO = recycleBinService.getDetailRecycleInfo(binId);
+
+            if (userId == "") {
+                recycleBinDTO.setFavorite(false);
+            } else {
+                recycleBinDTO.setFavorite(favoriteBinService.checkFavBin(Long.parseLong(userId), binId, binType));
+            }
+
+            res.add(recycleBinDTO);
+            responseDTO= ResponseDTO.<RecycleBinDTO>builder().status(200).success(true).data(res).build();
+
         } else {
             new IllegalArgumentException("해당하는 타입은 없습니다.");
         }
 
-        return ResponseEntity.ok().body("해당하는 쓰레기통은 없습니다.");
+        return ResponseEntity.ok().body(responseDTO);
+
     }
+
 }

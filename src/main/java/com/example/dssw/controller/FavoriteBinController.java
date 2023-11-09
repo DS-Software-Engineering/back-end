@@ -1,6 +1,8 @@
 package com.example.dssw.controller;
 
-import com.example.dssw.dto.CreateLikeDTO;
+import com.example.dssw.dto.LikeDTO;
+import com.example.dssw.dto.ResponseDTO;
+import com.example.dssw.dto.tokenDTO;
 import com.example.dssw.service.FavoriteBinService;
 import com.example.dssw.service.GeneralBinService;
 import com.example.dssw.service.RecycleBinService;
@@ -24,16 +26,21 @@ public class FavoriteBinController {
     private final FavoriteBinService favoriteBinService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createFavorite(@RequestBody CreateLikeDTO createLikeDTO){
-        favoriteBinService.createLike(createLikeDTO);
+    public ResponseEntity<?> createFavorite(@AuthenticationPrincipal String userId, @RequestBody LikeDTO likeDTO){
+        favoriteBinService.createLike(Long.parseLong(userId), likeDTO);
 
-        return ResponseEntity.ok().body("success");
+        ResponseDTO responseDTO=ResponseDTO.<tokenDTO>builder().status(200).success(true).Message("좋아요 생성 성공").build();
+
+        return ResponseEntity.ok().body(responseDTO);
     }
 
-    @GetMapping("/check")
-    public ResponseEntity<?> checkLike(@RequestParam String userId, @RequestParam(value="binId") Long binId, @RequestParam(value="binType") String binType){
-        boolean checkFav = favoriteBinService.checkFavBin(userId, binId, binType);
+    @DeleteMapping("/delete")
+    public ResponseEntity<ResponseDTO> deleteLike(@AuthenticationPrincipal String userId, @RequestBody LikeDTO likeDTO){
+        favoriteBinService.deleteLike(Long.parseLong(userId), likeDTO);
 
-        return ResponseEntity.ok().body(checkFav);
+        ResponseDTO responseDTO=ResponseDTO.<tokenDTO>builder().status(200).success(true).Message("좋아요 삭제 성공").build();
+
+        return ResponseEntity.ok().body(responseDTO);
     }
+
 }

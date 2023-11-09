@@ -7,8 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateLikeDTO {
-    private String userId;
+public class LikeDTO {
     private Long binId;
     private String binType;
 }

@@ -1,0 +1,19 @@
+cloud:
+  aws:
+    region:
+      static: ap-northeast-2  # AWS 기본 리전을 설정
+    stack:
+      auto: false
+
+logging:
+  level:
+    com:
+      amazonaws:
+        util:
+          EC2MetadataUtils: error
+
+spring:
+  s3:
+    bucket: narsha-s3-bucket
+    access-key: AKIASIOJID4DYLZPFUUS
+    secret-key: 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
