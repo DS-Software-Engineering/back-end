@@ -34,7 +34,7 @@ public class ReportDeclarationDTO {
        this.address = reportDeclarationEntity.getAddress();
        this.detail_location = reportDeclarationEntity.getDetail_location();
        this.image_url = reportDeclarationEntity.getImage_url();
-       this.type=reportDeclarationEntity.getImage_url();
+       this.type=reportDeclarationEntity.getType();
        this.date=reportDeclarationEntity.getDate();
        this.context=reportDeclarationEntity.getContext();
     }

@@ -1,15 +1,9 @@
 package com.example.dssw.service;
 
-import com.example.dssw.dto.MapDTO;
-import com.example.dssw.dto.MyInfoDTO;
-import com.example.dssw.dto.ReportDeclarationDTO;
-import com.example.dssw.dto.RewardHistoryDTO;
+import com.example.dssw.dto.*;
 import com.example.dssw.model.ReportDeclarationEntity;
-import com.example.dssw.model.RewardHistoryEntity;
 import com.example.dssw.model.UserEntity;
-import com.example.dssw.persistence.ReportDeclarationRepository;
-import com.example.dssw.persistence.RewardHistoryRepository;
-import com.example.dssw.persistence.UserRepository;
+import com.example.dssw.persistence.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +20,14 @@ public class MyPageService {
     @Autowired
     RewardHistoryRepository rewardHistoryRepository;
 
+    @Autowired
+    FavoriteBinRepository favoriteBinRepository;
+
+    @Autowired
+    GeneralBinRepository generalBinRepository;
+
+    @Autowired
+    RecycleBinRepository recycleBinRepository;
     @Autowired
     UserRepository userRepository;
     // 내 신고내역 찾기
@@ -55,4 +57,11 @@ public class MyPageService {
     }
 
 
+    public List<FavoriteBinDTO> getMyFavoriteBin(Long userid) {
+        List<FavoriteBinDTO> generalBin= generalBinRepository.searchFavoriteGeneralBin(userid);
+        List<FavoriteBinDTO> recycleBin = recycleBinRepository.searchFavoriteRecycleBin(userid);
+        recycleBin.addAll(generalBin);
+        return recycleBin;
+
+    }
 }

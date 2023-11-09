@@ -1,9 +1,6 @@
 package com.example.dssw.controller;
 
-import com.example.dssw.dto.MyInfoDTO;
-import com.example.dssw.dto.ReportDeclarationDTO;
-import com.example.dssw.dto.ResponseDTO;
-import com.example.dssw.dto.RewardHistoryDTO;
+import com.example.dssw.dto.*;
 import com.example.dssw.service.MyPageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,5 +52,14 @@ public class MyPageController {
         ResponseDTO responseDTO= ResponseDTO.builder().status(200).success(true).data(Collections.singletonList(result)).build();
         return ResponseEntity.ok().body(responseDTO);
     }
+
+    // 즐겨찾기
+    @GetMapping("/favoriteBin")
+    public ResponseEntity<?> getMyFavoriteBin(@AuthenticationPrincipal String userId){
+        List<FavoriteBinDTO> result = myPageService.getMyFavoriteBin(Long.parseLong(userId));
+        ResponseDTO responseDTO= ResponseDTO.<FavoriteBinDTO>builder().status(200).success(true).data(result).build();
+        return ResponseEntity.ok().body(responseDTO);
+    }
+
 
 }
