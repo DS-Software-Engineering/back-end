@@ -16,10 +16,10 @@ import java.util.List;
 
 @Configuration
 public class S3Config {
-    @Value("${spring.s3.access-key}")
+    @Value("${cloud.aws.credentials.access-key}")
     private String accessKey;
 
-    @Value("${spring.s3.secret-key}")
+    @Value("${cloud.aws.credentials.secret-key}")
     private String secretKey;
 
     @Value("${cloud.aws.region.static}")
