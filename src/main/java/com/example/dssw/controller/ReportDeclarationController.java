@@ -1,6 +1,7 @@
 package com.example.dssw.controller;
 
 import com.example.dssw.dto.DeclarationDTO;
+import com.example.dssw.dto.ReportDeclaration.UploadDeclarationDTO;
 import com.example.dssw.dto.ResponseDTO;
 import com.example.dssw.service.ReportDeclarationService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,11 +27,11 @@ public class ReportDeclarationController {
     ReportDeclarationService reportDeclarationService;
 
     @PostMapping("/uploadPost")
-    public ResponseEntity<?> upload(@AuthenticationPrincipal String userId, @RequestParam("images") MultipartFile multipartFile, @RequestParam(value="info")String declarationDTO) throws JsonProcessingException {
+    public ResponseEntity<?> upload(@AuthenticationPrincipal String userId, @RequestParam("images") MultipartFile multipartFile, @RequestParam(value="info")String uploaDeclarationDTO) throws JsonProcessingException {
         ResponseDTO responseDTO=null;
 
         ObjectMapper mapper = new ObjectMapper();
-        DeclarationDTO.uploadDeclarationDTO mapperUploadPostDTO = mapper.readValue(declarationDTO, DeclarationDTO.uploadDeclarationDTO.class);
+        UploadDeclarationDTO mapperUploadPostDTO = mapper.readValue(uploaDeclarationDTO, UploadDeclarationDTO.class);
 
 
         List<Long> res = new ArrayList<>();

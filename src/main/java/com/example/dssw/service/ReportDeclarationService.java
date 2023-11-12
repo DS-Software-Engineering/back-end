@@ -1,33 +1,34 @@
 package com.example.dssw.service;
 
 import com.example.dssw.dto.DeclarationDTO;
+import com.example.dssw.dto.ReportDeclaration.UploadDeclarationDTO;
 import com.example.dssw.model.ReportDeclarationEntity;
 import com.example.dssw.model.UserEntity;
 import com.example.dssw.persistence.ReportDeclarationRepository;
 import com.example.dssw.persistence.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class ReportDeclarationService {
-    @Autowired
-    ReportDeclarationRepository reportDeclarationRepository;
+    private final ReportDeclarationRepository reportDeclarationRepository;
 
-    @Autowired
-    AmazonS3Service amazonS3Service;
+    private final AmazonS3Service amazonS3Service;
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
 
-    public Long uploadPost(Long userId, MultipartFile multipartFile, DeclarationDTO.uploadDeclarationDTO declarationDTO){
+    public Long uploadPost(Long userId, MultipartFile multipartFile, UploadDeclarationDTO declarationDTO){
         UserEntity user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
 
         List<MultipartFile> files = new ArrayList<>();
@@ -42,6 +43,7 @@ public class ReportDeclarationService {
                 .context(declarationDTO.getContext())
                 .type(declarationDTO.getType())
                 .image_url(result.get(0))
+                .date(LocalDateTime.now())
                 .build();
 
         ReportDeclarationEntity uploadPost = reportDeclarationRepository.save(post);
