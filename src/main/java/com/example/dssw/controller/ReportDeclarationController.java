@@ -1,6 +1,7 @@
 package com.example.dssw.controller;
 
 import com.example.dssw.dto.DeclarationDTO;
+import com.example.dssw.dto.ReportDeclaration.GetDeclarationDTO;
 import com.example.dssw.dto.ReportDeclaration.UploadDeclarationDTO;
 import com.example.dssw.dto.ResponseDTO;
 import com.example.dssw.service.ReportDeclarationService;
@@ -43,15 +44,15 @@ public class ReportDeclarationController {
         return ResponseEntity.ok().body(responseDTO);
     }
 
-    @GetMapping("/getPost")
-    public ResponseEntity<?> getPost(@RequestParam Long postId){
+    @GetMapping("/getPostDetail")
+    public ResponseEntity<?> getPost(@AuthenticationPrincipal String userId, @RequestParam Long postId){
         ResponseDTO responseDTO=null;
 
-        List<DeclarationDTO.getDeclarationDTO> res = new ArrayList<>();
-        DeclarationDTO.getDeclarationDTO post = reportDeclarationService.getPost(postId);
+        List<GetDeclarationDTO> res = new ArrayList<>();
+        GetDeclarationDTO post = reportDeclarationService.getPost(postId);
         res.add(post);
 
-        responseDTO= ResponseDTO.<DeclarationDTO.getDeclarationDTO>builder().status(200).success(true).data(res).build();
+        responseDTO= ResponseDTO.<GetDeclarationDTO>builder().status(200).success(true).data(res).build();
 
         return ResponseEntity.ok().body(responseDTO);
     }

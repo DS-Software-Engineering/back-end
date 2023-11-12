@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @Data
 public class DeclarationDTO {
+
     @Builder
     @Data
     public static class uploadDeclarationDTO{

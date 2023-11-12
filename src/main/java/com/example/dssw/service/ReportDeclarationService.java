@@ -1,6 +1,7 @@
 package com.example.dssw.service;
 
 import com.example.dssw.dto.DeclarationDTO;
+import com.example.dssw.dto.ReportDeclaration.GetDeclarationDTO;
 import com.example.dssw.dto.ReportDeclaration.UploadDeclarationDTO;
 import com.example.dssw.model.ReportDeclarationEntity;
 import com.example.dssw.model.UserEntity;
@@ -52,11 +53,11 @@ public class ReportDeclarationService {
         return uploadPost.getId();
     }
 
-    public DeclarationDTO.getDeclarationDTO getPost(Long postId){
+    public GetDeclarationDTO getPost(Long postId){
 
-        ReportDeclarationEntity post = reportDeclarationRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
+        ReportDeclarationEntity post = reportDeclarationRepository.findById(postId).orElseThrow(() -> new IllegalArgumentException("해당하는 게시글이 없습니다."));
 
-        DeclarationDTO.getDeclarationDTO result = DeclarationDTO.getDeclarationDTO.builder()
+        GetDeclarationDTO result = GetDeclarationDTO.builder()
                 .user(post.getUser().getId())
                 .address(post.getAddress())
                 .detail_location(post.getDetail_location())
