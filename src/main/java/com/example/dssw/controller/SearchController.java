@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -23,7 +24,7 @@ public class SearchController {
     @GetMapping("/search")
     public ResponseEntity<?> searchBins(@RequestParam String keyword, @RequestParam(required = false) String type) {
         ResponseDTO responseDTO=null;
-        List<Object> result=null;
+        List<Object> result= new ArrayList<>();
 
         // 1. 모든 쓰레기통일 경우
         if (type==null) {
@@ -31,11 +32,11 @@ public class SearchController {
         }
         // 2. 재활용 정거장일 경우
         else if(type.equals("recycleBin")) {
-            result = Collections.singletonList(searchService.searchRecycleBins(keyword));
+            result.addAll(searchService.searchRecycleBins(keyword));
         }
         // 3. 가로 휴지통의 담배꽁초,일반,음료컵,재활용 일 경우
         else {
-            result = Collections.singletonList(searchService.searchGeneralBinsWithFilter(keyword, type));
+            result.addAll(searchService.searchGeneralBinsWithFilter(keyword, type));
         }
 
         responseDTO= ResponseDTO.builder().status(200).success(true).data(result).build();
