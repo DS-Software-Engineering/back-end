@@ -22,5 +22,5 @@ public class SolveBoardImagesEntity {
 
     @ManyToOne(cascade = CascadeType.REMOVE, targetEntity = SolveBoardEntity.class)
     @JoinColumn(referencedColumnName = "id", name = "board_id", nullable = false)
-    SolveBoardEntity solveBoard; // 유저 id
+    SolveBoardEntity solveBoard; // 게시글 id
 }
