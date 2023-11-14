@@ -10,9 +10,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
-
+@Builder
+@Data
 public class DeclarationDTO {
+
     @Builder
     @Data
     public static class uploadDeclarationDTO{

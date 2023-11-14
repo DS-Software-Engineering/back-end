@@ -41,7 +41,6 @@ public class ReportDeclarationEntity {
     private String type; // 신고 종류
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss", timezone = "Asia/Seoul")
-    @Column(nullable = false)
     @CreatedDate
     private LocalDateTime date; // 업로드 날짜 시간 분 초
 }
