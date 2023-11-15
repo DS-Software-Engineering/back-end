@@ -18,10 +18,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -34,11 +31,6 @@ public class SolveBoardController {
 
     @Autowired
     AmazonS3Service amazonS3Service;
-
-    @GetMapping
-    public List<SolveBoardEntity> getAllSolveBoards() {
-        return solveBoardService.getAllBoards();
-    }
 
     @PostMapping("/post")
     public ResponseEntity<?> createBoardWithImages(@AuthenticationPrincipal String userId, @ModelAttribute SolveBoardDTO boardDTO, @RequestPart(value = "images", required = false) List<MultipartFile> images) {
@@ -67,6 +59,33 @@ public class SolveBoardController {
 
     }
 
+    @GetMapping("/list")
+    public ResponseEntity<?> getSolveBoardList() {
+        ResponseDTO<Object> responseDTO = null;
+        List<Object> result = new ArrayList<>();
+
+        try {
+            List<SolveBoardEntity> solveBoards = solveBoardService.getAllBoards();
+            result.addAll(solveBoards);
+
+            responseDTO = ResponseDTO.builder().status(200).success(true).Message("주요처리사례 리스트").build();
+            responseDTO.setData(result);
+
+            return ResponseEntity.ok().body(responseDTO);
+        } catch (Exception e) {
+            responseDTO = ResponseDTO.builder().status(HttpStatus.INTERNAL_SERVER_ERROR.value()).success(false).Message(e.getMessage()).data(Collections.emptyList()).build();
+
+            return ResponseEntity.ok().body(responseDTO);
+        }
+
+    }
+
+    @GetMapping("/list/{id}")
+    public ResponseEntity<?> getSolveBoardById(@PathVariable Long id) {
+        Optional<SolveBoardEntity> solveBoard = solveBoardService.getBoardById(id);
+        return ResponseEntity.ok().body(solveBoard);
+    }
+
 //    @PostMapping("/upload")
 //    public ResponseEntity<?> createBoard(@AuthenticationPrincipal String userId, @RequestBody SolveBoardDTO boardDTO) {
 //        ResponseDTO<Object> responseDTO = new ResponseDTO<>();
@@ -87,10 +106,10 @@ public class SolveBoardController {
 //
 //    }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteBoard(@PathVariable Long id) {
-        solveBoardService.deleteBoard(id);
-        return ResponseEntity.ok().build();
-    }
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<?> deleteBoard(@PathVariable Long id) {
+//        solveBoardService.deleteBoard(id);
+//        return ResponseEntity.ok().build();
+//    }
 
 }

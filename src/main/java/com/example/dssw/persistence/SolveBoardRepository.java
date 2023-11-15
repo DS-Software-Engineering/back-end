@@ -10,4 +10,7 @@ import java.util.Optional;
 @Repository
 public interface SolveBoardRepository extends JpaRepository<SolveBoardEntity, Long> {
 
+    List<SolveBoardEntity> findAll();
+
+    Optional<SolveBoardEntity> findById(Long id);
 }

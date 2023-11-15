@@ -31,8 +31,8 @@ public class SolveBoardService {
         return solveBoardRepository.findAll();
     }
 
-    public SolveBoardEntity getBoardById(Long id) {
-        return solveBoardRepository.findById(id).orElse(null);
+    public Optional<SolveBoardEntity> getBoardById(Long id) {
+        return solveBoardRepository.findById(id);
     }
 
     public SolveBoardEntity createBoard(String userId, SolveBoardDTO board) {
