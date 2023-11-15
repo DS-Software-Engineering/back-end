@@ -52,7 +52,8 @@ public class SolveBoardController {
             // save board with image URLs
             SolveBoardEntity createBoard = solveBoardService.createBoardWithImages(userId, boardDTO, imageUrls);
 
-            responseDTO = ResponseDTO.builder().status(200).success(true).Message("주요 처리 사례 게시글 작성 성공").data(Collections.singletonList(createBoard)).build();
+            Long solveBoardId = createBoard.getId();
+            responseDTO = ResponseDTO.builder().status(200).success(true).Message("주요 처리 사례 게시글 작성 성공").data(Collections.singletonList(solveBoardId)).build();
 
             return ResponseEntity.ok().body(responseDTO);
         } catch (Exception e) {
@@ -66,25 +67,25 @@ public class SolveBoardController {
 
     }
 
-    @PostMapping("/upload")
-    public ResponseEntity<?> createBoard(@AuthenticationPrincipal String userId, @RequestBody SolveBoardDTO boardDTO) {
-        ResponseDTO<Object> responseDTO = new ResponseDTO<>();
-
-        try {
-            SolveBoardEntity createBoard = solveBoardService.createBoard(userId, boardDTO);
-            responseDTO = ResponseDTO.builder().status(200).success(true).Message("주요 처리 사례 게시글 작성 성공").data(Collections.singletonList(createBoard)).build();
-
-            return ResponseEntity.ok().body(responseDTO);
-        } catch (Exception e) {
-            responseDTO.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            responseDTO.setSuccess(false);
-            responseDTO.setMessage(e.getMessage());
-            responseDTO.setData((Collections.emptyList()));
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
-        }
-
-    }
+//    @PostMapping("/upload")
+//    public ResponseEntity<?> createBoard(@AuthenticationPrincipal String userId, @RequestBody SolveBoardDTO boardDTO) {
+//        ResponseDTO<Object> responseDTO = new ResponseDTO<>();
+//
+//        try {
+//            SolveBoardEntity createBoard = solveBoardService.createBoard(userId, boardDTO);
+//            responseDTO = ResponseDTO.builder().status(200).success(true).Message("주요 처리 사례 게시글 작성 성공").data(Collections.singletonList(createBoard)).build();
+//
+//            return ResponseEntity.ok().body(responseDTO);
+//        } catch (Exception e) {
+//            responseDTO.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+//            responseDTO.setSuccess(false);
+//            responseDTO.setMessage(e.getMessage());
+//            responseDTO.setData((Collections.emptyList()));
+//
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
+//        }
+//
+//    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteBoard(@PathVariable Long id) {
@@ -92,19 +93,4 @@ public class SolveBoardController {
         return ResponseEntity.ok().build();
     }
 
-//    @PostMapping("/uploadPost")
-//    public ResponseEntity<?> upload(@AuthenticationPrincipal String userId, @RequestParam("images") MultipartFile multipartFile, @ModelAttribute SolveBoardDTO solveBoardDTO) throws JsonProcessingException {
-//        ResponseDTO responseDTO=null;
-//
-//        ObjectMapper mapper = new ObjectMapper();
-//        SolveBoardDTO mapperUploadPostDTO = mapper.readValue(solveBoardDTO, SolveBoardDTO.class);
-//
-//        List<Long> result = new ArrayList<>();
-//        Long postId = solveBoardService.uploadPost(Long.parseLong(userId), multipartFile, mapperUploadPostDTO);
-//        result.add(postId);
-//
-//        responseDTO= ResponseDTO.<Long>builder().status(200).success(true).data(result).build();
-//
-//        return ResponseEntity.ok().body(responseDTO);
-//    }
 }

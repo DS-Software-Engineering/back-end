@@ -78,23 +78,4 @@ public class SolveBoardService {
         solveBoardRepository.deleteById(id);
     }
 
-//    public Long uploadPost(Long userId, MultipartFile multipartFile, SolveBoardDTO solveBoardDTO){
-//        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
-//
-//        List<MultipartFile> files = new ArrayList<>();
-//        files.add(multipartFile);
-//
-//        List<String> result = amazonS3Service.uploadFiles("solveboard", files);
-//
-//        SolveBoardEntity post = SolveBoardEntity.builder()
-//                .user(user)
-//                .title(solveBoardDTO.getTitle())
-//                .context(solveBoardDTO.getContext())
-//                .build();
-//
-//        SolveBoardEntity uploadPost = solveBoardRepository.save(post);
-//        if (uploadPost == null) return null;
-//
-//        return uploadPost.getId();
-//    }
 }
