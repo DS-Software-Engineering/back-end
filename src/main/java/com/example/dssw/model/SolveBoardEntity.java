@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -33,4 +35,7 @@ public class SolveBoardEntity {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd hh:mm:ss", timezone = "Asia/Seoul")
     @Column(nullable = false)
     private LocalDateTime date; // 업로드 날짜 시간 분 초
+
+    @OneToMany(mappedBy = "solveBoard", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SolveBoardImagesEntity> images = new ArrayList<>();
 }

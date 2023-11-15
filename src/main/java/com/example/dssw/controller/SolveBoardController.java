@@ -4,9 +4,11 @@ import com.example.dssw.dto.DeclarationDTO;
 import com.example.dssw.dto.ResponseDTO;
 import com.example.dssw.dto.SolveBoardDTO;
 import com.example.dssw.model.SolveBoardEntity;
+import com.example.dssw.service.AmazonS3Service;
 import com.example.dssw.service.SolveBoardService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,9 +32,38 @@ public class SolveBoardController {
     @Autowired
     SolveBoardService solveBoardService;
 
+    @Autowired
+    AmazonS3Service amazonS3Service;
+
     @GetMapping
     public List<SolveBoardEntity> getAllSolveBoards() {
         return solveBoardService.getAllBoards();
+    }
+
+    @PostMapping("/post")
+    public ResponseEntity<?> createBoardWithImages(@AuthenticationPrincipal String userId, @ModelAttribute SolveBoardDTO boardDTO, @RequestPart(value = "images", required = false) List<MultipartFile> images) {
+        ResponseDTO<Object> responseDTO = new ResponseDTO<>();
+
+        try {
+            // s3 upload
+            String folderName = "solveBoard";
+            List<String> imageUrls = amazonS3Service.uploadFiles(folderName, images);
+
+            // save board with image URLs
+            SolveBoardEntity createBoard = solveBoardService.createBoardWithImages(userId, boardDTO, imageUrls);
+
+            responseDTO = ResponseDTO.builder().status(200).success(true).Message("주요 처리 사례 게시글 작성 성공").data(Collections.singletonList(createBoard)).build();
+
+            return ResponseEntity.ok().body(responseDTO);
+        } catch (Exception e) {
+            responseDTO.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            responseDTO.setSuccess(false);
+            responseDTO.setMessage(e.getMessage());
+            responseDTO.setData((Collections.emptyList()));
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
+        }
+
     }
 
     @PostMapping("/upload")
