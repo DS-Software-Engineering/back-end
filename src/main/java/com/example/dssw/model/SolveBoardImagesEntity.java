@@ -20,7 +20,7 @@ public class SolveBoardImagesEntity {
     @Column(nullable=false, length = 200)
     private String image_url;
 
-    @ManyToOne(cascade = CascadeType.REMOVE, targetEntity = SolveBoardEntity.class)
-    @JoinColumn(referencedColumnName = "id", name = "board_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "board_id", nullable = false)
     SolveBoardEntity solveBoard; // 게시글 id
 }
