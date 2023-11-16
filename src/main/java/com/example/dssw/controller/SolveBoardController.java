@@ -3,6 +3,7 @@ package com.example.dssw.controller;
 import com.example.dssw.dto.DeclarationDTO;
 import com.example.dssw.dto.ResponseDTO;
 import com.example.dssw.dto.SolveBoardDTO;
+import com.example.dssw.dto.SolveBoardResponseDTO;
 import com.example.dssw.model.SolveBoardEntity;
 import com.example.dssw.service.AmazonS3Service;
 import com.example.dssw.service.SolveBoardService;
@@ -65,11 +66,10 @@ public class SolveBoardController {
         List<Object> result = new ArrayList<>();
 
         try {
-            List<SolveBoardEntity> solveBoards = solveBoardService.getAllBoards();
+            List<SolveBoardResponseDTO> solveBoards = solveBoardService.getAllSolveBoards();
             result.addAll(solveBoards);
 
-            responseDTO = ResponseDTO.builder().status(200).success(true).Message("주요처리사례 리스트").build();
-            responseDTO.setData(result);
+            responseDTO = ResponseDTO.builder().status(200).success(true).Message("주요처리사례 리스트").data(result).build();
 
             return ResponseEntity.ok().body(responseDTO);
         } catch (Exception e) {
@@ -82,34 +82,15 @@ public class SolveBoardController {
 
     @GetMapping("/list/{id}")
     public ResponseEntity<?> getSolveBoardById(@PathVariable Long id) {
-        Optional<SolveBoardEntity> solveBoard = solveBoardService.getBoardById(id);
-        return ResponseEntity.ok().body(solveBoard);
+        ResponseDTO<Object> responseDTO = null;
+        List<Object> result = new ArrayList<>();
+
+        SolveBoardResponseDTO solveBoard = solveBoardService.getSolveBoardDetail(id);
+        result.add(solveBoard);
+
+        responseDTO = ResponseDTO.builder().status(200).success(true).data(result).build();
+
+        return ResponseEntity.ok().body(responseDTO);
     }
-
-//    @PostMapping("/upload")
-//    public ResponseEntity<?> createBoard(@AuthenticationPrincipal String userId, @RequestBody SolveBoardDTO boardDTO) {
-//        ResponseDTO<Object> responseDTO = new ResponseDTO<>();
-//
-//        try {
-//            SolveBoardEntity createBoard = solveBoardService.createBoard(userId, boardDTO);
-//            responseDTO = ResponseDTO.builder().status(200).success(true).Message("주요 처리 사례 게시글 작성 성공").data(Collections.singletonList(createBoard)).build();
-//
-//            return ResponseEntity.ok().body(responseDTO);
-//        } catch (Exception e) {
-//            responseDTO.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-//            responseDTO.setSuccess(false);
-//            responseDTO.setMessage(e.getMessage());
-//            responseDTO.setData((Collections.emptyList()));
-//
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
-//        }
-//
-//    }
-
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity<?> deleteBoard(@PathVariable Long id) {
-//        solveBoardService.deleteBoard(id);
-//        return ResponseEntity.ok().build();
-//    }
 
 }
