@@ -121,4 +121,38 @@ public class UserController {
         }
     }
 
+    @GetMapping("/checkId")
+    public ResponseEntity<ResponseDTO>  checkId(@RequestParam(required = true) String id){
+            if (userService.checkId(id)){
+                List<Boolean> result=new ArrayList<>();
+                result.add(true);
+                ResponseDTO responseDTO=ResponseDTO.<Boolean>builder().status(200).success(true).Message("사용 가능한 아이디 입니다.").data(result).build();
+                return ResponseEntity.ok().body(responseDTO);
+            }
+            else{
+                List<Boolean> result=new ArrayList<>();
+                result.add(false);
+                ResponseDTO responseDTO=ResponseDTO.<Boolean>builder().status(200).success(true).Message("중복된 닉네임 입니다.").data(result).build();
+                return ResponseEntity.ok().body(responseDTO);
+            }
+
+    }
+    @GetMapping("/checkNickname")
+    public ResponseEntity<ResponseDTO>  checkNickname(@RequestParam(required = true) String nickname){
+        if (userService.checkNickname(nickname)){
+            List<Boolean> result=new ArrayList<>();
+            result.add(true);
+            ResponseDTO responseDTO=ResponseDTO.<Boolean>builder().status(200).success(true).Message("사용 가능한 닉네임 입니다.").data(result).build();
+            return ResponseEntity.ok().body(responseDTO);
+        }
+        else{
+            List<Boolean> result=new ArrayList<>();
+            result.add(false);
+            ResponseDTO responseDTO=ResponseDTO.<Boolean>builder().status(200).success(true).Message("중복된 닉네임 입니다.").data(result).build();
+            return ResponseEntity.ok().body(responseDTO);
+        }
+
+    }
+
+
 }
