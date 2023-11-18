@@ -132,7 +132,7 @@ public class UserController {
             else{
                 List<Boolean> result=new ArrayList<>();
                 result.add(false);
-                ResponseDTO responseDTO=ResponseDTO.<Boolean>builder().status(200).success(true).Message("중복된 닉네임 입니다.").data(result).build();
+                ResponseDTO responseDTO=ResponseDTO.<Boolean>builder().status(200).success(true).Message("중복된 아이디 입니다.").data(result).build();
                 return ResponseEntity.ok().body(responseDTO);
             }
 
