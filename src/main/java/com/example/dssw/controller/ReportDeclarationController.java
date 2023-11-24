@@ -28,15 +28,15 @@ public class ReportDeclarationController {
     ReportDeclarationService reportDeclarationService;
 
     @PostMapping("/uploadPost")
-    public ResponseEntity<?> upload(@AuthenticationPrincipal String userId, @RequestParam("images") MultipartFile multipartFile, @RequestParam(value="info")String uploaDeclarationDTO) throws JsonProcessingException {
+    public ResponseEntity<?> upload(@AuthenticationPrincipal String userId, @RequestPart(value = "images", required = false) MultipartFile multipartFile, @ModelAttribute UploadDeclarationDTO uploaDeclarationDTO) throws JsonProcessingException {
         ResponseDTO responseDTO=null;
 
         ObjectMapper mapper = new ObjectMapper();
-        UploadDeclarationDTO mapperUploadPostDTO = mapper.readValue(uploaDeclarationDTO, UploadDeclarationDTO.class);
+//        UploadDeclarationDTO mapperUploadPostDTO = mapper.readValue(uploaDeclarationDTO, UploadDeclarationDTO.class);
 
 
         List<Long> res = new ArrayList<>();
-        Long postId = reportDeclarationService.uploadPost(Long.parseLong(userId), multipartFile, mapperUploadPostDTO);
+        Long postId = reportDeclarationService.uploadPost(Long.parseLong(userId), multipartFile, uploaDeclarationDTO);
         res.add(postId);
 
         responseDTO= ResponseDTO.<Long>builder().status(200).success(true).data(res).build();
