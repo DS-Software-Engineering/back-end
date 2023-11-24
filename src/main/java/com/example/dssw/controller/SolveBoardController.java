@@ -3,6 +3,7 @@ package com.example.dssw.controller;
 import com.example.dssw.dto.DeclarationDTO;
 import com.example.dssw.dto.ResponseDTO;
 import com.example.dssw.dto.SolveBoardDTO;
+import com.example.dssw.dto.SolveBoardResponseDTO;
 import com.example.dssw.model.SolveBoardEntity;
 import com.example.dssw.service.AmazonS3Service;
 import com.example.dssw.service.SolveBoardService;
@@ -18,10 +19,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -35,11 +33,6 @@ public class SolveBoardController {
     @Autowired
     AmazonS3Service amazonS3Service;
 
-    @GetMapping
-    public List<SolveBoardEntity> getAllSolveBoards() {
-        return solveBoardService.getAllBoards();
-    }
-
     @PostMapping("/post")
     public ResponseEntity<?> createBoardWithImages(@AuthenticationPrincipal String userId, @ModelAttribute SolveBoardDTO boardDTO, @RequestPart(value = "images", required = false) List<MultipartFile> images) {
         ResponseDTO<Object> responseDTO = new ResponseDTO<>();
@@ -52,7 +45,8 @@ public class SolveBoardController {
             // save board with image URLs
             SolveBoardEntity createBoard = solveBoardService.createBoardWithImages(userId, boardDTO, imageUrls);
 
-            responseDTO = ResponseDTO.builder().status(200).success(true).Message("주요 처리 사례 게시글 작성 성공").data(Collections.singletonList(createBoard)).build();
+            Long solveBoardId = createBoard.getId();
+            responseDTO = ResponseDTO.builder().status(200).success(true).Message("주요 처리 사례 게시글 작성 성공").data(Collections.singletonList(solveBoardId)).build();
 
             return ResponseEntity.ok().body(responseDTO);
         } catch (Exception e) {
@@ -66,45 +60,37 @@ public class SolveBoardController {
 
     }
 
-    @PostMapping("/upload")
-    public ResponseEntity<?> createBoard(@AuthenticationPrincipal String userId, @RequestBody SolveBoardDTO boardDTO) {
-        ResponseDTO<Object> responseDTO = new ResponseDTO<>();
+    @GetMapping("/list")
+    public ResponseEntity<?> getSolveBoardList() {
+        ResponseDTO<Object> responseDTO = null;
+        List<Object> result = new ArrayList<>();
 
         try {
-            SolveBoardEntity createBoard = solveBoardService.createBoard(userId, boardDTO);
-            responseDTO = ResponseDTO.builder().status(200).success(true).Message("주요 처리 사례 게시글 작성 성공").data(Collections.singletonList(createBoard)).build();
+            List<SolveBoardResponseDTO> solveBoards = solveBoardService.getAllSolveBoards();
+            result.addAll(solveBoards);
+
+            responseDTO = ResponseDTO.builder().status(200).success(true).Message("주요처리사례 리스트").data(result).build();
 
             return ResponseEntity.ok().body(responseDTO);
         } catch (Exception e) {
-            responseDTO.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-            responseDTO.setSuccess(false);
-            responseDTO.setMessage(e.getMessage());
-            responseDTO.setData((Collections.emptyList()));
+            responseDTO = ResponseDTO.builder().status(HttpStatus.INTERNAL_SERVER_ERROR.value()).success(false).Message(e.getMessage()).data(Collections.emptyList()).build();
 
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseDTO);
+            return ResponseEntity.ok().body(responseDTO);
         }
 
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteBoard(@PathVariable Long id) {
-        solveBoardService.deleteBoard(id);
-        return ResponseEntity.ok().build();
+    @GetMapping("/list/{id}")
+    public ResponseEntity<?> getSolveBoardById(@PathVariable Long id) {
+        ResponseDTO<Object> responseDTO = null;
+        List<Object> result = new ArrayList<>();
+
+        SolveBoardResponseDTO solveBoard = solveBoardService.getSolveBoardDetail(id);
+        result.add(solveBoard);
+
+        responseDTO = ResponseDTO.builder().status(200).success(true).data(result).build();
+
+        return ResponseEntity.ok().body(responseDTO);
     }
 
-//    @PostMapping("/uploadPost")
-//    public ResponseEntity<?> upload(@AuthenticationPrincipal String userId, @RequestParam("images") MultipartFile multipartFile, @ModelAttribute SolveBoardDTO solveBoardDTO) throws JsonProcessingException {
-//        ResponseDTO responseDTO=null;
-//
-//        ObjectMapper mapper = new ObjectMapper();
-//        SolveBoardDTO mapperUploadPostDTO = mapper.readValue(solveBoardDTO, SolveBoardDTO.class);
-//
-//        List<Long> result = new ArrayList<>();
-//        Long postId = solveBoardService.uploadPost(Long.parseLong(userId), multipartFile, mapperUploadPostDTO);
-//        result.add(postId);
-//
-//        responseDTO= ResponseDTO.<Long>builder().status(200).success(true).data(result).build();
-//
-//        return ResponseEntity.ok().body(responseDTO);
-//    }
 }

@@ -1,9 +1,11 @@
 package com.example.dssw.service;
 
 import com.example.dssw.dto.SolveBoardDTO;
+import com.example.dssw.dto.SolveBoardResponseDTO;
 import com.example.dssw.model.SolveBoardEntity;
 import com.example.dssw.model.SolveBoardImagesEntity;
 import com.example.dssw.model.UserEntity;
+import com.example.dssw.persistence.SolveBoardImagesRepository;
 import com.example.dssw.persistence.SolveBoardRepository;
 import com.example.dssw.persistence.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,33 +24,13 @@ public class SolveBoardService {
     SolveBoardRepository solveBoardRepository;
 
     @Autowired
-    AmazonS3Service amazonS3Service;
+    SolveBoardImagesRepository solveBoardImagesRepository;
 
     @Autowired
     UserRepository userRepository;
 
-    public List<SolveBoardEntity> getAllBoards() {
-        return solveBoardRepository.findAll();
-    }
-
-    public SolveBoardEntity getBoardById(Long id) {
-        return solveBoardRepository.findById(id).orElse(null);
-    }
-
-    public SolveBoardEntity createBoard(String userId, SolveBoardDTO board) {
-
-        Optional<UserEntity> user = userRepository.findById(Long.parseLong(userId));
-
-        SolveBoardEntity solveBoardEntity = new SolveBoardEntity();
-        solveBoardEntity.setTitle(board.getTitle());
-        solveBoardEntity.setContext(board.getContext());
-        solveBoardEntity.setDate(LocalDateTime.now());
-        solveBoardEntity.setUser(user.get());
-
-        solveBoardRepository.save(solveBoardEntity);
-
-        return solveBoardEntity;
-
+    public Optional<SolveBoardEntity> getBoardById(Long id) {
+        return solveBoardRepository.findById(id);
     }
 
     public SolveBoardEntity createBoardWithImages(String userId, SolveBoardDTO board, List<String> imageUrls) {
@@ -61,40 +43,69 @@ public class SolveBoardService {
         solveBoardEntity.setDate(LocalDateTime.now());
         solveBoardEntity.setUser(user.get());
 
+        // 게시글 db에 저장
+        solveBoardRepository.save(solveBoardEntity);
+
+        // 이미지 db에 저장
         for (String imageUrl : imageUrls) {
             SolveBoardImagesEntity imageEntity = new SolveBoardImagesEntity();
             imageEntity.setImage_url(imageUrl);
             imageEntity.setSolveBoard(solveBoardEntity);
-            solveBoardEntity.getImages().add(imageEntity);
+
+            solveBoardImagesRepository.save(imageEntity);
         }
 
-        solveBoardRepository.save(solveBoardEntity);
-
         return solveBoardEntity;
-
     }
 
-    public void deleteBoard(Long id) {
-        solveBoardRepository.deleteById(id);
+    public List<SolveBoardResponseDTO> getAllSolveBoards() {
+        List<SolveBoardEntity> solveBoards = solveBoardRepository.findAll();
+
+        List<SolveBoardResponseDTO> solveBoardsWithImages = new ArrayList<>();
+
+        for (SolveBoardEntity solveBoard : solveBoards) {
+            // 해당 게시글의 이미지들 가져옴
+            List<SolveBoardImagesEntity> image = solveBoardImagesRepository.findBySolveBoard(solveBoard);
+
+            List<String> images = new ArrayList<>();
+            for (int i=0; i<image.size(); i++) {
+                images.add(image.get(i).getImage_url());
+            }
+
+            SolveBoardResponseDTO solveBoardResponseDTO = SolveBoardResponseDTO.builder()
+                    .id(solveBoard.getId())
+                    .title(solveBoard.getTitle())
+                    .context(solveBoard.getContext())
+                    .userNickname(solveBoard.getUser().getNickname())
+                    .date(solveBoard.getDate())
+                    .image_url(images)
+                    .build();
+
+            solveBoardsWithImages.add(solveBoardResponseDTO);
+        }
+        return solveBoardsWithImages;
     }
 
-//    public Long uploadPost(Long userId, MultipartFile multipartFile, SolveBoardDTO solveBoardDTO){
-//        UserEntity user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
-//
-//        List<MultipartFile> files = new ArrayList<>();
-//        files.add(multipartFile);
-//
-//        List<String> result = amazonS3Service.uploadFiles("solveboard", files);
-//
-//        SolveBoardEntity post = SolveBoardEntity.builder()
-//                .user(user)
-//                .title(solveBoardDTO.getTitle())
-//                .context(solveBoardDTO.getContext())
-//                .build();
-//
-//        SolveBoardEntity uploadPost = solveBoardRepository.save(post);
-//        if (uploadPost == null) return null;
-//
-//        return uploadPost.getId();
-//    }
+    public SolveBoardResponseDTO getSolveBoardDetail(Long id) {
+        Optional<SolveBoardEntity> solveBoard = solveBoardRepository.findById(id);
+
+        List<SolveBoardImagesEntity> image = solveBoardImagesRepository.findBySolveBoard(solveBoard.get());
+
+        List<String> images = new ArrayList<>();
+        for (int i=0; i<image.size(); i++) {
+            images.add(image.get(i).getImage_url());
+        }
+
+        SolveBoardResponseDTO solveBoardResponseDTO = SolveBoardResponseDTO.builder()
+                .id(solveBoard.get().getId())
+                .title(solveBoard.get().getTitle())
+                .context(solveBoard.get().getContext())
+                .userNickname(solveBoard.get().getUser().getNickname())
+                .date(solveBoard.get().getDate())
+                .image_url(images)
+                .build();
+
+        return solveBoardResponseDTO;
+    }
+
 }

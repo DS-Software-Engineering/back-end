@@ -74,6 +74,24 @@ public class UserService {
     }
 
 
+    public boolean checkId(String id) {
+        final Optional<UserEntity> user=userRepository.findByUserid(id);
+        if(user.isPresent()) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
 
+    public boolean checkNickname(String nickname) {
+        final Optional<UserEntity> user=userRepository.findByNickname(nickname);
+        if(user.isPresent()) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
 }
 

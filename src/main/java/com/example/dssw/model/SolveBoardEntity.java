@@ -36,6 +36,6 @@ public class SolveBoardEntity {
     @Column(nullable = false)
     private LocalDateTime date; // 업로드 날짜 시간 분 초
 
-    @OneToMany(mappedBy = "solveBoard", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SolveBoardImagesEntity> images = new ArrayList<>();
+//    @OneToMany(mappedBy = "solveBoard", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<SolveBoardImagesEntity> images = new ArrayList<>();
 }
