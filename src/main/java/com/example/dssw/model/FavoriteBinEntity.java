@@ -17,7 +17,7 @@ public class FavoriteBinEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.REMOVE, targetEntity = UserEntity.class)
+    @ManyToOne //(cascade = CascadeType.REMOVE, targetEntity = UserEntity.class)
     @JoinColumn(referencedColumnName = "id", name = "userid", nullable = false)
     UserEntity user; // 유저 id
 

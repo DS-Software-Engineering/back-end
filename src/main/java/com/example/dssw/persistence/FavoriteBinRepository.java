@@ -4,7 +4,6 @@ import com.example.dssw.model.FavoriteBinEntity;
 import com.example.dssw.model.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
 import java.util.Optional;
 
 public interface FavoriteBinRepository extends JpaRepository<FavoriteBinEntity,Long> {
@@ -12,6 +11,5 @@ public interface FavoriteBinRepository extends JpaRepository<FavoriteBinEntity,L
 
     Optional<FavoriteBinEntity> findByUserAndBinIdAndBinType(UserEntity user, Long binId, String binType);
 
-
-    Optional<FavoriteBinEntity> deleteByUserAndBinIdAndBinType(UserEntity user, Long binId, String binType);
+    void deleteById(Long id);
 }

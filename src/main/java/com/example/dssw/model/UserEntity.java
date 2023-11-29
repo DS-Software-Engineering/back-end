@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 //import javax.*;
 //import javax.persistence.*;
 
@@ -33,9 +35,12 @@ public class UserEntity {
     private String phonenum;
 
     @Column(nullable = false)
-    private  int reward;
+    private int reward;
 
     @Column(nullable = false)
-    private  boolean admin;
+    private boolean admin;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<FavoriteBinEntity> favorites;
 
 }
