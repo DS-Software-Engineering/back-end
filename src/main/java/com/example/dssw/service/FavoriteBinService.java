@@ -33,44 +33,38 @@ public class FavoriteBinService {
     public void createLike(Long userId, LikeDTO createLikeDTO){
         UserEntity user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
 
-        Long binId = null;
-
         if(createLikeDTO.getBinType().equals("general")){
-            GeneralBinEntity bin = generalBinRepository.findById(createLikeDTO.getBinId()).orElseThrow(() -> new IllegalArgumentException("해당하는 쓰레기통이 없습니다."));
-            binId = bin.getId();
+            generalBinRepository.findById(createLikeDTO.getBinId()).orElseThrow(() -> new IllegalArgumentException("해당하는 쓰레기통이 없습니다."));
 
         } else if (createLikeDTO.getBinType().equals("recycle")) {
-            RecycleBinEntity bin = recycleBinRepository.findById(createLikeDTO.getBinId()).orElseThrow(() -> new IllegalArgumentException("해당하는 쓰레기통이 없습니다."));
-            binId = bin.getId();
+            recycleBinRepository.findById(createLikeDTO.getBinId()).orElseThrow(() -> new IllegalArgumentException("해당하는 쓰레기통이 없습니다."));
 
         } else {
             new IllegalArgumentException("해당하는 쓰레기통이 없습니다.");
         }
 
-        FavoriteBinEntity fav = FavoriteBinEntity.builder()
+        Optional<FavoriteBinEntity> fav = favoriteBinRepository.findByUserAndBinIdAndBinType(user, createLikeDTO.getBinId(), createLikeDTO.getBinType());
+
+        if(fav.isPresent()){
+            throw new IllegalArgumentException("좋아요가 이미 눌려져있습니다.");
+        }
+
+        FavoriteBinEntity favorite = FavoriteBinEntity.builder()
                 .user(user)
-                .binId(binId)
+                .binId(createLikeDTO.getBinId())
                 .binType(createLikeDTO.getBinType())
                 .build();
 
 
-        favoriteBinRepository.save(fav);
+        favoriteBinRepository.save(favorite);
 
-        FavoriteCreatedEvent event = new FavoriteCreatedEvent(this, fav);
+        FavoriteCreatedEvent event = new FavoriteCreatedEvent(this, favorite);
         eventPublisher.publishEvent(event);
     }
 
 
     public Boolean checkFavBin(Long userId, Long binId, String binType){
         UserEntity user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
-
-        if(binType.equals("general")){
-            GeneralBinEntity bin = generalBinRepository.findById(binId).orElseThrow(() -> new IllegalArgumentException("해당하는 쓰레기통이 없습니다."));
-        } else if (binType.equals("recycle")) {
-            RecycleBinEntity bin = recycleBinRepository.findById(binId).orElseThrow(() -> new IllegalArgumentException("해당하는 쓰레기통이 없습니다."));
-        } else {
-            new IllegalArgumentException("해당하는 쓰레기통이 없습니다.");
-        }
 
         Optional<FavoriteBinEntity> fav = favoriteBinRepository.findByUserAndBinIdAndBinType(user, binId, binType);
 
@@ -86,25 +80,9 @@ public class FavoriteBinService {
     public void deleteLike(Long userId, LikeDTO likeDTO){
         UserEntity user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("해당하는 유저가 없습니다."));
 
-        Long binId = null;
+        FavoriteBinEntity fav = favoriteBinRepository.findByUserAndBinIdAndBinType(user, likeDTO.getBinId(), likeDTO.getBinType()).orElseThrow(() -> new IllegalArgumentException("해당하는 좋아요가 없습니다."));
 
-        if(likeDTO.getBinType().equals("general")){
-            GeneralBinEntity bin = generalBinRepository.findById(likeDTO.getBinId()).orElseThrow(() -> new IllegalArgumentException("해당하는 쓰레기통이 없습니다."));
-            binId = bin.getId();
-
-        } else if (likeDTO.getBinType().equals("recycle")) {
-            RecycleBinEntity bin = recycleBinRepository.findById(likeDTO.getBinId()).orElseThrow(() -> new IllegalArgumentException("해당하는 쓰레기통이 없습니다."));
-            binId = bin.getId();
-
-        } else {
-            new IllegalArgumentException("해당하는 쓰레기통이 없습니다.");
-        }
-
-        Optional<FavoriteBinEntity> fav = favoriteBinRepository.findByUserAndBinIdAndBinType(user, binId, likeDTO.getBinType());
-
-        if(fav.isPresent()){
-            favoriteBinRepository.deleteByUserAndBinIdAndBinType(user, binId, likeDTO.getBinType());
-        }
+        favoriteBinRepository.deleteById(fav.getId());
     }
 
 
