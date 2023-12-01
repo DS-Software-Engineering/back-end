@@ -31,4 +31,8 @@ public class GeneralBinDTO {
 
     private boolean favorite;
 
+    private double latitude;
+
+    private double longtitude;
+
 }

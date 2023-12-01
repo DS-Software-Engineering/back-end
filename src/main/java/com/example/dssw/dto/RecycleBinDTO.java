@@ -24,5 +24,8 @@ public class RecycleBinDTO {
     private String center_phone_num;
 
     private boolean favorite;
+    private double latitude;
+
+    private double longtitude;
 
 }
