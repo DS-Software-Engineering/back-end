@@ -29,6 +29,8 @@ public class RecycleBinService {
         res.setAddress(bin.getAddress());
         res.setDetail_location(bin.getDetail_location());
         res.setCenter_phone_num(bin.getCenter_phone_num());
+        res.setLatitude(bin.getLatitude());
+        res.setLongtitude(bin.getLongtitude());
 
         return res;
     }

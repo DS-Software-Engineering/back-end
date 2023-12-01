@@ -44,6 +44,8 @@ public class GeneralBinService {
         res.setType_recycle(bin.isType_recycle());
         res.setType_drink(bin.isType_drink());
         res.setShape(bin.getShape());
+        res.setLatitude(bin.getLatitude());
+        res.setLongtitude(bin.getLongtitude());
 
 
         return res;
