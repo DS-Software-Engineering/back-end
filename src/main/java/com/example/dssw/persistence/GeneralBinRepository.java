@@ -36,7 +36,7 @@ public interface GeneralBinRepository extends JpaRepository<GeneralBinEntity,Lon
     Optional<GeneralBinEntity> findById(Long Id);
 
     @Query("SELECT new com.example.dssw.dto.FavoriteBinDTO(b.id ,b.latitude,b.longtitude,'GeneralBin',b.address,b.detail_location)  " +
-            "FROM GeneralBinEntity b where b.id in (select f.binId from FavoriteBinEntity f where f.user.id = :userid and binType='GeneralBin')")
+            "FROM GeneralBinEntity b where b.id in (select f.binId from FavoriteBinEntity f where f.user.id = :userid and binType='general')")
     List<FavoriteBinDTO> searchFavoriteGeneralBin(@Param("userid") Long userid);
 
 }

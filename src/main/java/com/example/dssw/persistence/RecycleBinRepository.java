@@ -18,6 +18,6 @@ public interface RecycleBinRepository extends JpaRepository<RecycleBinEntity,Lon
     List<RecycleBinEntity> searchRecycleBins(@Param("keyword") String keyword);
 
     @Query("SELECT new com.example.dssw.dto.FavoriteBinDTO(b.id,b.latitude,b.longtitude,'RecycleBin',b.address,b.detail_location)  " +
-            "FROM RecycleBinEntity b where b.id in (select f.binId from FavoriteBinEntity f where f.user.id = :userid and binType='RecycleBin')")
+            "FROM RecycleBinEntity b where b.id in (select f.binId from FavoriteBinEntity f where f.user.id = :userid and binType='recycle')")
     List<FavoriteBinDTO> searchFavoriteRecycleBin(@Param("userid") Long userid);
 }
