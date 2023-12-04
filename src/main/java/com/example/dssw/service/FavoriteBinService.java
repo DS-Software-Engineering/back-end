@@ -40,7 +40,7 @@ public class FavoriteBinService {
             recycleBinRepository.findById(createLikeDTO.getBinId()).orElseThrow(() -> new IllegalArgumentException("해당하는 쓰레기통이 없습니다."));
 
         } else {
-            new IllegalArgumentException("해당하는 쓰레기통이 없습니다.");
+            throw new IllegalArgumentException("해당하는 쓰레기통이 없습니다.");
         }
 
         Optional<FavoriteBinEntity> fav = favoriteBinRepository.findByUserAndBinIdAndBinType(user, createLikeDTO.getBinId(), createLikeDTO.getBinType());
